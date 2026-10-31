@@ -16,28 +16,7 @@ function getMapLink(attraction, destination) {
   );
 }
 
-function getEnquiryLink(destination) {
-  const subject = `Travel enquiry: ${destination}`;
 
-  const body = [
-    "Hello Nature Holidays,",
-    "",
-    `I'd like to plan a trip to ${destination}.`,
-    "",
-    "Preferred dates:",
-    "Number of travellers:",
-    "Departure city:",
-    "Places or activities I'm interested in:",
-    "",
-    "Please share available tour options and a quote.",
-  ].join("\n");
-
-  return (
-    "mailto:info@natureholidays.co" +
-    `?subject=${encodeURIComponent(subject)}` +
-    `&body=${encodeURIComponent(body)}`
-  );
-}
 
 export default function DestinationDetails() {
   const { slug } = useParams();
@@ -64,7 +43,7 @@ export default function DestinationDetails() {
     );
   }
 
-  const enquiryLink = getEnquiryLink(destination.name);
+ 
 
   return (
     <>
@@ -114,6 +93,29 @@ export default function DestinationDetails() {
             Photo credit
           </a>
         </section>
+        
+        <section
+          className="destination-snapshot"
+          aria-label={`${destination.name} at a glance`}
+        >
+          <div className="destination-snapshot-inner">
+            <div className="destination-snapshot-item">
+              <span>STATE / REGION</span>
+              <strong>{destination.state}</strong>
+            </div>
+
+            <div className="destination-snapshot-item">
+              <span>FEATURED PLACES</span>
+              <strong>{destination.attractions.length}</strong>
+            </div>
+
+            <div className="destination-snapshot-item">
+              <span>EXPERIENCE IDEAS</span>
+              <strong>{guide.activities.length}</strong>
+            </div>
+          </div>
+        </section>
+
 
         <div className="destination-guide-body">
           <nav

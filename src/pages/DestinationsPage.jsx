@@ -1,29 +1,14 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+import Navbar from "../components/Navbar";
 import { destinations } from "../data/destinations";
 import Footer from "../components/Footer";
 import "./DestinationsPage.css";
 
 export function DestinationNavigation() {
-  return (
-    <header className="site-header">
-      <nav className="navbar" aria-label="Main navigation">
-        <Link className="brand" to="/">
-          <img src="/images/logo.png" alt="" />
-          <span>
-            Nature <strong>Holidays</strong>
-          </span>
-        </Link>
-
-        <div className="nav-links">
-          <Link to="/">Home</Link>
-          <Link to="/packages">Packages</Link>
-          <Link to="/destinations">Destinations</Link>
-        </div>
-      </nav>
-    </header>
-  );
+  return <Navbar />;
 }
 
 export default function DestinationsPage() {
@@ -37,8 +22,7 @@ export default function DestinationsPage() {
 
   const visibleDestinations = destinations.filter((place) => {
     const matchesState =
-      selectedState === "All states" ||
-      place.state === selectedState;
+      selectedState === "All states" || place.state === selectedState;
 
     const text =
       `${place.name} ${place.state} ${place.theme}`.toLowerCase();
@@ -73,7 +57,6 @@ export default function DestinationsPage() {
         <div className="destination-directory-filters">
           <label className="destination-search-box">
             <span>Search destinations</span>
-
             <input
               type="search"
               placeholder="Try Mysore, Kerala or beaches"
@@ -84,7 +67,6 @@ export default function DestinationsPage() {
 
           <label className="destination-state-filter">
             <span>Filter by state</span>
-
             <select
               value={selectedState}
               onChange={(event) => setSelectedState(event.target.value)}
@@ -114,7 +96,6 @@ export default function DestinationsPage() {
                     loading="lazy"
                     decoding="async"
                   />
-
                   <span className="destination-state-badge">
                     {place.state}
                   </span>
@@ -125,7 +106,6 @@ export default function DestinationsPage() {
                     <h2>{place.name}</h2>
                     <span aria-hidden="true">↗</span>
                   </div>
-
                   <p>{place.theme}</p>
                 </div>
               </Link>
@@ -137,7 +117,6 @@ export default function DestinationsPage() {
           <div className="destination-no-results">
             <h2>No matching destinations.</h2>
             <p>Try another name or choose a different state.</p>
-
             <button
               type="button"
               onClick={() => {

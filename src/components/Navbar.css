@@ -1,0 +1,503 @@
+
+.nh-header {
+  position: relative;
+  z-index: 100;
+  width: 100%;
+  background: #fbfaf6;
+  border-bottom: 1px solid rgba(49, 76, 57, 0.12);
+}
+
+.nh-navbar {
+  width: min(1440px, 100%);
+  min-height: 82px;
+  margin: 0 auto;
+  padding: 0 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.nh-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  flex-shrink: 0;
+  color: #254b35;
+  text-decoration: none;
+}
+
+.nh-brand img {
+  width: 43px;
+  height: 43px;
+  object-fit: contain;
+}
+
+.nh-brand > span {
+  display: flex;
+  flex-direction: column;
+  font-size: 19px;
+  line-height: 1.05;
+  letter-spacing: -0.7px;
+  font-weight: 500;
+}
+
+.nh-brand strong {
+  font-weight: 700;
+}
+
+.nh-brand small {
+  margin-top: 6px;
+  color: #829080;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+}
+
+.nh-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 25px;
+  flex: 1;
+}
+
+.nh-nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(13px, 1.65vw, 25px);
+}
+
+.nh-nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 0;
+  color: #5d665d;
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+
+.nh-nav-link:hover,
+.nh-nav-link--active {
+  color: #254b35;
+}
+
+.nh-nav-link--active::after {
+  position: absolute;
+  right: 0;
+  bottom: 2px;
+  left: 0;
+  height: 2px;
+  background: #718d69;
+  border-radius: 4px;
+  content: "";
+}
+
+.nh-experiences {
+  position: relative;
+}
+
+.nh-experiences summary {
+  list-style: none;
+}
+
+.nh-experiences summary::-webkit-details-marker {
+  display: none;
+}
+
+.nh-dropdown-arrow {
+  font-size: 16px;
+  transition: transform 180ms ease;
+}
+
+.nh-experiences[open] .nh-dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.nh-experiences-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: -18px;
+  width: 225px;
+  padding: 16px;
+  background: #fffefa;
+  border: 1px solid #e5e9df;
+  border-radius: 13px;
+  box-shadow: 0 15px 38px rgba(28, 48, 34, 0.13);
+}
+
+.nh-menu-eyebrow {
+  display: block;
+  margin: 0 0 9px;
+  color: #899485;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.nh-experiences-menu .nh-nav-link {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 11px 4px;
+  border-bottom: 1px solid #edf0e9;
+  font-size: 12px;
+}
+
+.nh-experiences-menu .nh-nav-link:last-child {
+  border-bottom: 0;
+}
+
+.nh-experiences-menu .nh-nav-link::after {
+  display: none;
+}
+
+.nh-nav-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.nh-city-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.nh-city-picker > span {
+  color: #879084;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.nh-city-picker select {
+  max-width: 112px;
+  padding: 3px 15px 3px 0;
+  color: #354d3c;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.nh-currency {
+  color: #657365;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.nh-plan-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 43px;
+  padding: 0 17px;
+  color: #fffefa;
+  background: #315b40;
+  border: 1px solid #315b40;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background 180ms ease,
+    transform 180ms ease;
+}
+
+.nh-plan-button:hover {
+  background: #244a33;
+  transform: translateY(-1px);
+}
+
+.nh-mobile-toggle {
+  display: none;
+  width: 43px;
+  height: 43px;
+  padding: 11px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid #dce4d8;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.nh-mobile-toggle span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #315b40;
+  border-radius: 5px;
+}
+
+.nh-nav-link:focus-visible,
+.nh-plan-button:focus-visible,
+.nh-mobile-toggle:focus-visible,
+.nh-city-picker select:focus-visible {
+  outline: 3px solid rgba(104, 139, 98, 0.5);
+  outline-offset: 4px;
+}
+
+@media (max-width: 1120px) {
+  .nh-navbar {
+    gap: 18px;
+    padding-right: 3%;
+    padding-left: 3%;
+  }
+
+  .nh-navigation {
+    gap: 17px;
+  }
+
+  .nh-nav-links {
+    gap: 13px;
+  }
+
+  .nh-nav-link {
+    font-size: 11px;
+  }
+
+  .nh-nav-actions {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .nh-navbar {
+    min-height: 72px;
+    padding: 0 22px;
+  }
+
+  .nh-mobile-toggle {
+    display: flex;
+  }
+
+  .nh-navigation {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    display: none;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 18px;
+    padding: 20px 24px 25px;
+    background: #fbfaf6;
+    border-bottom: 1px solid #e3e9df;
+    box-shadow: 0 15px 25px rgba(32, 50, 35, 0.09);
+  }
+
+  .nh-navigation--open {
+    display: flex;
+  }
+
+  .nh-nav-links {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .nh-nav-link {
+    width: 100%;
+    min-height: 43px;
+    padding: 11px 2px;
+    font-size: 13px;
+  }
+
+  .nh-nav-link--active::after {
+    right: auto;
+    bottom: 4px;
+    width: 25px;
+  }
+
+  .nh-experiences-menu {
+    position: static;
+    width: 100%;
+    margin: 3px 0 10px;
+    padding: 12px 15px;
+    box-shadow: none;
+  }
+
+  .nh-experiences-menu .nh-nav-link {
+    min-height: 40px;
+  }
+
+  .nh-nav-actions {
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-top: 14px;
+    border-top: 1px solid #e7ebe3;
+  }
+
+  .nh-city-picker {
+    margin-right: auto;
+  }
+
+  .nh-plan-button {
+    min-height: 45px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nh-navbar {
+    min-height: 68px;
+    padding: 0 16px;
+  }
+
+  .nh-brand img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .nh-brand > span {
+    font-size: 17px;
+  }
+
+  .nh-nav-actions {
+    align-items: center;
+  }
+
+  .nh-plan-button {
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nh-nav-link,
+  .nh-dropdown-arrow,
+  .nh-plan-button {
+    transition: none;
+  }
+}
+
+
+/* DEEP FOREST GREEN NAVBAR */
+
+.nh-header {
+  background: #173f2c;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.nh-navbar {
+  background: #173f2c;
+}
+
+.nh-brand {
+  color: #fffaf0;
+}
+
+.nh-brand img {
+  width: 46px;
+  height: 46px;
+  padding: 5px;
+  object-fit: contain;
+  background: #f7f3e8;
+  border-radius: 8px;
+}
+
+.nh-brand small {
+  color: #c1d0bd;
+}
+
+.nh-nav-link {
+  color: #e0e8dc;
+}
+
+.nh-nav-link:hover,
+.nh-nav-link--active {
+  color: #ffffff;
+}
+
+.nh-nav-link--active::after {
+  background: #c5d4a9;
+}
+
+.nh-dropdown-arrow {
+  color: #d4dfc9;
+}
+
+.nh-experiences-menu {
+  background: #f9f7ef;
+  border-color: #e1e6d9;
+}
+
+.nh-experiences-menu .nh-nav-link {
+  color: #465b49;
+}
+
+.nh-experiences-menu .nh-nav-link:hover,
+.nh-experiences-menu .nh-nav-link--active {
+  color: #173f2c;
+}
+
+.nh-menu-eyebrow {
+  color: #84927f;
+}
+
+.nh-nav-actions {
+  color: #fffaf0;
+}
+
+.nh-city-picker > span {
+  color: #c1d0bd;
+}
+
+.nh-city-picker select {
+  color: #fffaf0;
+  background: transparent;
+}
+
+.nh-currency {
+  color: #e0e8dc;
+}
+
+.nh-plan-button {
+  color: #173f2c;
+  background: #f4f0e5;
+  border-color: #f4f0e5;
+}
+
+.nh-plan-button:hover {
+  color: #173f2c;
+  background: #e5e8d5;
+}
+
+.nh-mobile-toggle {
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.nh-mobile-toggle span {
+  background: #fffaf0;
+}
+
+@media (max-width: 900px) {
+  .nh-navigation {
+    background: #173f2c;
+    border-bottom-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .nh-nav-actions {
+    border-top-color: rgba(255, 255, 255, 0.17);
+  }
+
+  .nh-experiences-menu {
+    background: #f9f7ef;
+  }
+}

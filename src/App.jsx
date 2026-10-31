@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import "./App.css";
 import useHeroTransition from "./useHeroTransition";
@@ -7,7 +8,9 @@ import ExploreServices from "./components/ExploreServices";
 import PopularTours from "./components/PopularTours";
 import WhyUs from "./components/WhyUs";
 import Footer from "./components/Footer";
-import { Link, useNavigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import { useNavigate } from "react-router-dom";
+
 const destinations = [
   {
     name: "Karnataka",
@@ -73,6 +76,7 @@ export default function App() {
   const [incomingIndex, setIncomingIndex] = useState(null);
   const [paused, setPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+
   useHeroTransition(incomingIndex, reducedMotion);
 
   const activeDestination = destinations[activeIndex];
@@ -91,7 +95,6 @@ export default function App() {
     }
   );
 
-  // Respect the visitor's device motion preference.
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -102,12 +105,9 @@ export default function App() {
     updatePreference();
     media.addEventListener("change", updatePreference);
 
-    return () => {
-      media.removeEventListener("change", updatePreference);
-    };
+    return () => media.removeEventListener("change", updatePreference);
   }, []);
 
-  // Preload the images so background changes are less likely to flash.
   useEffect(() => {
     destinations.forEach((item) => {
       const image = new Image();
@@ -115,7 +115,6 @@ export default function App() {
     });
   }, []);
 
-  // Schedule the next destination after the current one has rested.
   useEffect(() => {
     if (paused || reducedMotion || incomingIndex !== null) {
       return;
@@ -125,12 +124,9 @@ export default function App() {
       setIncomingIndex((activeIndex + 1) % destinations.length);
     }, DISPLAY_DURATION);
 
-    return () => {
-      window.clearTimeout(timer);
-    };
+    return () => window.clearTimeout(timer);
   }, [activeIndex, incomingIndex, paused, reducedMotion]);
 
-  // Commit the new background after its expansion finishes.
   useEffect(() => {
     if (incomingIndex === null) {
       return;
@@ -144,16 +140,11 @@ export default function App() {
       reducedMotion ? 0 : TRANSITION_DURATION
     );
 
-    return () => {
-      window.clearTimeout(timer);
-    };
+    return () => window.clearTimeout(timer);
   }, [incomingIndex, reducedMotion]);
 
   function showNextDestination() {
-    if (isTransitioning) {
-      return;
-    }
-
+    if (isTransitioning) return;
     setIncomingIndex((activeIndex + 1) % destinations.length);
   }
 
@@ -170,67 +161,31 @@ export default function App() {
   }
 
   function handleSearch(event) {
-  event.preventDefault();
+    event.preventDefault();
 
-  const selectedDestination = destination.trim();
+    const selectedDestination = destination.trim();
 
-  if (!selectedDestination) {
-    setSearchMessage("Enter a destination to get started.");
-    return;
+    if (!selectedDestination) {
+      setSearchMessage("Enter a destination to get started.");
+      return;
+    }
+
+    const params = new URLSearchParams({ q: selectedDestination });
+
+    if (travelDate) {
+      params.set("date", travelDate);
+    }
+
+    navigate(`/packages?${params.toString()}`);
   }
-
-  const params = new URLSearchParams({
-    q: selectedDestination,
-  });
-
-  if (travelDate) {
-    params.set("date", travelDate);
-  }
-
-  navigate(`/packages?${params.toString()}`);
-}
 
   return (
     <>
-      <header className="site-header">
-        <nav className="navbar" aria-label="Main navigation">
-          <a className="brand" href="/" aria-label="Nature Holidays home">
-            <img src="/images/logo.png" alt="" />
-
-            <span>
-              Nature <strong>Holidays</strong>
-            </span>
-          </a>
-
-          <div className="nav-links">
-            <a href="#explore">Explore experiences</a>
-            <Link to="/packages">Packages</Link>
-            <Link to="/destinations">Destinations</Link>
-            <Link to="/contact">Contact</Link>
-          </div>
-
-          <div className="nav-actions">
-            <label className="city-picker">
-              <span className="city-label">Your city</span>
-
-              <select
-                aria-label="Home city"
-                value={homeCity}
-                onChange={(event) => setHomeCity(event.target.value)}
-              >
-                <option>Bengaluru</option>
-                <option>Mumbai</option>
-                <option>Delhi</option>
-                <option>Chennai</option>
-                <option>Hyderabad</option>
-                <option>Pune</option>
-              </select>
-            </label>
-
-            <span className="currency">₹ INR</span>
-          </div>
-        </nav>
-      </header>
+      <Navbar
+        showCityPicker
+        homeCity={homeCity}
+        onHomeCityChange={setHomeCity}
+      />
 
       <main>
         <section
@@ -275,10 +230,7 @@ export default function App() {
           </div>
 
           <div className="hero-bottom">
-            <div
-              className="destination-caption"
-              id="destination-preview"
-            >
+            <div className="destination-caption" id="destination-preview">
               <span className="destination-eyebrow">IN THE SPOTLIGHT</span>
               <h2>{activeDestination.name}</h2>
               <p>{activeDestination.caption}</p>
@@ -332,13 +284,9 @@ export default function App() {
                   }}
                 >
                   <img src={item.image} alt="" />
-
                   <div className="destination-card-shade" />
-
                   <div className="destination-card-text">
-                    <span>
-                      {String(item.index + 1).padStart(2, "0")}
-                    </span>
+                    <span>{String(item.index + 1).padStart(2, "0")}</span>
                     <h3>{item.name}</h3>
                   </div>
                 </div>
@@ -347,15 +295,10 @@ export default function App() {
           </div>
         </section>
 
-        <section
-          className="discovery"
-          id="explore"
-          aria-label="Find an experience"
-        >
+        <section className="discovery" id="explore" aria-label="Find an experience">
           <form className="search-panel" onSubmit={handleSearch}>
             <label className="search-field">
               <span>Where to?</span>
-
               <input
                 type="text"
                 list="destination-options"
@@ -383,7 +326,6 @@ export default function App() {
 
             <label className="search-field date-field">
               <span>When?</span>
-
               <input
                 type="date"
                 aria-label="Travel date"
@@ -415,12 +357,14 @@ export default function App() {
             {searchMessage}
           </p>
         </section>
+
         <PackageCategories />
         <FeaturedPackages />
         <ExploreServices />
         <PopularTours />
         <WhyUs />
       </main>
+
       <Footer />
     </>
   );

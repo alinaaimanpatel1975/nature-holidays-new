@@ -1,6 +1,8 @@
+
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "./ExplorePage.css";
 
@@ -13,84 +15,23 @@ const exploreCategories = {
     image: "/images/things-to-do.jpg",
     groups: ["All options", "Theme Parks", "Resort Outings", "Sightseeing"],
     items: [
-      {
-        name: "Wonderla Parks & Resort",
-        group: "Theme Parks",
-        description: "Enquire about a park outing and available arrangements.",
-      },
-      {
-        name: "GRS Fantasy Park",
-        group: "Theme Parks",
-        description: "Ask about entry arrangements and group outing options.",
-      },
-      {
-        name: "Snow City",
-        group: "Theme Parks",
-        description: "Check current visit options for your preferred date.",
-      },
-      {
-        name: "Fun World",
-        group: "Theme Parks",
-        description: "Explore an amusement-park outing with your group.",
-      },
-      {
-        name: "Jollywood Studios",
-        group: "Theme Parks",
-        description: "Request current outing options and entry information.",
-      },
-      {
-        name: "Elim Resort",
-        group: "Resort Outings",
-        description: "Ask about available day-out packages and inclusions.",
-      },
-      {
-        name: "Guhantara Resort",
-        group: "Resort Outings",
-        description: "Enquire about a resort outing for your group.",
-      },
-      {
-        name: "Dharamshi Resort",
-        group: "Resort Outings",
-        description: "Request the current day-out arrangements and quote.",
-      },
-      {
-        name: "Greenwood Resort",
-        group: "Resort Outings",
-        description: "Check availability and outing options with the team.",
-      },
-      {
-        name: "Dreamland Resort",
-        group: "Resort Outings",
-        description: "Ask about group sizes, dates and package inclusions.",
-      },
-      {
-        name: "Avaniya Adventures Resort",
-        group: "Resort Outings",
-        description: "Enquire about available outings and activities.",
-      },
-      {
-        name: "Namma Bengaluru Rounds",
-        group: "Sightseeing",
-        description: "Plan a city route around gardens, museums and landmarks.",
-      },
-      {
-        name: "Nandi Hills and Isha Temple",
-        group: "Sightseeing",
-        description: "Explore this outing listed in the brochure.",
-      },
-      {
-        name: "Mysore, KRS Garden",
-        group: "Sightseeing",
-        description: "Request the sightseeing route and travel arrangements.",
-      },
-      {
-        name: "Hampi & Pattadakal",
-        group: "Sightseeing",
-        description: "Ask about a heritage journey through these destinations.",
-      },
+      { name: "Wonderla Parks & Resort", group: "Theme Parks", description: "Enquire about a park outing and available arrangements." },
+      { name: "GRS Fantasy Park", group: "Theme Parks", description: "Ask about entry arrangements and group outing options." },
+      { name: "Snow City", group: "Theme Parks", description: "Check current visit options for your preferred date." },
+      { name: "Fun World", group: "Theme Parks", description: "Explore an amusement-park outing with your group." },
+      { name: "Jollywood Studios", group: "Theme Parks", description: "Request current outing options and entry information." },
+      { name: "Elim Resort", group: "Resort Outings", description: "Ask about available day-out packages and inclusions." },
+      { name: "Guhantara Resort", group: "Resort Outings", description: "Enquire about a resort outing for your group." },
+      { name: "Dharamshi Resort", group: "Resort Outings", description: "Request the current day-out arrangements and quote." },
+      { name: "Greenwood Resort", group: "Resort Outings", description: "Check availability and outing options with the team." },
+      { name: "Dreamland Resort", group: "Resort Outings", description: "Ask about group sizes, dates and package inclusions." },
+      { name: "Avaniya Adventures Resort", group: "Resort Outings", description: "Enquire about available outings and activities." },
+      { name: "Namma Bengaluru Rounds", group: "Sightseeing", description: "Plan a city route around gardens, museums and landmarks." },
+      { name: "Nandi Hills and Isha Temple", group: "Sightseeing", description: "Explore this outing listed in the brochure." },
+      { name: "Mysore, KRS Garden", group: "Sightseeing", description: "Request the sightseeing route and travel arrangements." },
+      { name: "Hampi & Pattadakal", group: "Sightseeing", description: "Ask about a heritage journey through these destinations." },
     ],
   },
-
   accommodation: {
     title: "Accommodation",
     subtitle: "Find your place to pause.",
@@ -99,33 +40,12 @@ const exploreCategories = {
     image: "/images/accommodation.jpg",
     groups: ["All options", "Hotels", "Resorts", "Group Stays"],
     items: [
-      {
-        name: "Hotel reservation assistance",
-        group: "Hotels",
-        description:
-          "Share your destination, dates, room count and preferred hotel category.",
-      },
-      {
-        name: "Resort booking enquiries",
-        group: "Resorts",
-        description:
-          "Ask about available resorts and whether you need a day outing or an overnight stay.",
-      },
-      {
-        name: "School & college group stays",
-        group: "Group Stays",
-        description:
-          "Discuss group size, room arrangements, meal requirements and your itinerary.",
-      },
-      {
-        name: "Corporate & group accommodation",
-        group: "Group Stays",
-        description:
-          "Share your team’s stay requirements and ask about suitable arrangements.",
-      },
+      { name: "Hotel reservation assistance", group: "Hotels", description: "Share your destination, dates, room count and preferred hotel category." },
+      { name: "Resort booking enquiries", group: "Resorts", description: "Ask about available resorts and whether you need a day outing or an overnight stay." },
+      { name: "School & college group stays", group: "Group Stays", description: "Discuss group size, room arrangements, meal requirements and your itinerary." },
+      { name: "Corporate & group accommodation", group: "Group Stays", description: "Share your team’s stay requirements and ask about suitable arrangements." },
     ],
   },
-
   transport: {
     title: "Transport options",
     subtitle: "Let’s get you there.",
@@ -134,30 +54,10 @@ const exploreCategories = {
     image: "/images/transport.jpg",
     groups: ["All options", "Flights", "Trains", "Buses", "Tour Transport"],
     items: [
-      {
-        name: "Flight ticket-booking assistance",
-        group: "Flights",
-        description:
-          "Share your departure city, destination, dates and passenger count.",
-      },
-      {
-        name: "Train ticket-booking assistance",
-        group: "Trains",
-        description:
-          "Tell the team your route, travel date and preferred travel class.",
-      },
-      {
-        name: "Bus ticket-booking assistance",
-        group: "Buses",
-        description:
-          "Ask about available options for your route and travel date.",
-      },
-      {
-        name: "Transport for your tour",
-        group: "Tour Transport",
-        description:
-          "Discuss pickup points, group size and transport requirements for your package.",
-      },
+      { name: "Flight ticket-booking assistance", group: "Flights", description: "Share your departure city, destination, dates and passenger count." },
+      { name: "Train ticket-booking assistance", group: "Trains", description: "Tell the team your route, travel date and preferred travel class." },
+      { name: "Bus ticket-booking assistance", group: "Buses", description: "Ask about available options for your route and travel date." },
+      { name: "Transport for your tour", group: "Tour Transport", description: "Discuss pickup points, group size and transport requirements for your package." },
     ],
   },
 };
@@ -174,7 +74,6 @@ function ExploreContent({ category, data }) {
 
   const visibleItems = data.items.filter((item) => {
     const matchesGroup = group === "All options" || item.group === group;
-
     const text =
       `${item.name} ${item.group} ${item.description}`.toLowerCase();
 
@@ -186,7 +85,6 @@ function ExploreContent({ category, data }) {
       <section className="explore-page-banner">
         <img src={data.image} alt="" />
         <div className="explore-page-banner-shade" />
-
         <div className="explore-page-banner-content">
           <span>EXPLORE NATURE HOLIDAYS</span>
           <h1>{data.title}</h1>
@@ -250,13 +148,9 @@ function ExploreContent({ category, data }) {
           {visibleItems.map((item) => (
             <article className="explore-option-card" key={item.name}>
               <span className="explore-option-category">{item.group}</span>
-
               <h3>{item.name}</h3>
               <p>{item.description}</p>
-
-              <Link
-                to={`/contact?package=${encodeURIComponent(item.name)}`}
-              >
+              <Link to={`/contact?package=${encodeURIComponent(item.name)}`}>
                 Enquire now
                 <span aria-hidden="true">↗</span>
               </Link>
@@ -268,7 +162,6 @@ function ExploreContent({ category, data }) {
           <div className="explore-empty">
             <h3>No matching options.</h3>
             <p>Try another search or clear your filters.</p>
-
             <button
               type="button"
               onClick={() => {
@@ -292,7 +185,6 @@ function ExploreContent({ category, data }) {
             <h2>Not sure where to start?</h2>
             <p>Tell us what you need. We’ll help you explore the options.</p>
           </div>
-
           <Link to="/contact">
             Talk to our team <span aria-hidden="true">↗</span>
           </Link>
@@ -308,23 +200,7 @@ export default function ExplorePage() {
 
   return (
     <>
-      <header className="site-header">
-        <nav className="navbar" aria-label="Main navigation">
-          <Link className="brand" to="/">
-            <img src="/images/logo.png" alt="" />
-            <span>
-              Nature <strong>Holidays</strong>
-            </span>
-          </Link>
-
-          <div className="nav-links">
-            <Link to="/">Home</Link>
-            <Link to="/packages">Packages</Link>
-            <Link to="/destinations">Destinations</Link>
-            <Link to="/contact">Contact</Link>
-          </div>
-        </nav>
-      </header>
+      <Navbar />
 
       {data ? (
         <ExploreContent key={category} category={category} data={data} />

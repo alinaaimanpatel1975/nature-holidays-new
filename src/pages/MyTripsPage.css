@@ -1,0 +1,364 @@
+.my-trips-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 40px 72px;
+}
+
+.my-trips-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.my-trips-breadcrumb a {
+  text-decoration: none;
+}
+
+.my-trips-heading {
+  max-width: 700px;
+  margin: 48px 0 34px;
+}
+
+.my-trips-eyebrow {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}
+
+.my-trips-heading h1 {
+  margin-top: 14px;
+  color: var(--forest);
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(32px, 5vw, 42px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -1.4px;
+}
+
+.my-trips-heading > p {
+  max-width: 540px;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+/* SUMMARY */
+
+.my-trips-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 24px;
+  padding: 22px 24px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--sage);
+}
+
+.my-trips-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.my-trips-summary > div span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.3px;
+}
+
+.my-trips-summary > div strong {
+  color: var(--forest);
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.my-trips-summary > p {
+  max-width: 360px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+/* TRIP CARDS */
+
+.my-trips-list {
+  display: grid;
+  gap: 16px;
+}
+
+.my-trip-card {
+  min-width: 0;
+  padding: 25px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--white);
+  transition:
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+.my-trip-card:hover {
+  border-color: var(--forest);
+  transform: translateY(-2px);
+}
+
+.my-trip-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.my-trip-card-eyebrow {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+}
+
+.my-trip-card-top h2 {
+  margin-top: 9px;
+  color: var(--forest);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.5px;
+  overflow-wrap: anywhere;
+}
+
+.my-trip-status {
+  padding: 8px 11px;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  color: var(--muted);
+  background: var(--ivory);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.my-trip-card-details {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 26px;
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.my-trip-card-details > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.my-trip-card-details span {
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.my-trip-card-details strong {
+  color: var(--forest);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.my-trip-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 18px;
+}
+
+.my-trip-reference {
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0.8px;
+  overflow-wrap: anywhere;
+}
+
+.my-trip-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.my-trip-actions a,
+.my-trip-actions button {
+  padding: 0;
+  border: 0;
+  color: var(--forest);
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.my-trip-actions a {
+  text-underline-offset: 4px;
+}
+
+.my-trip-actions a:hover {
+  text-decoration: underline;
+}
+
+.my-trip-actions button {
+  color: var(--muted);
+}
+
+.my-trip-actions button:hover {
+  color: #a33b32;
+}
+
+/* EMPTY STATE */
+
+.my-trips-empty {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 64px 28px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--white);
+  text-align: center;
+}
+
+.my-trips-empty-icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 24px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--forest);
+  background: var(--sage);
+  font-size: 24px;
+}
+
+.my-trips-empty h2 {
+  margin-top: 13px;
+  color: var(--forest);
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: -0.7px;
+}
+
+.my-trips-empty > p {
+  max-width: 430px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+.my-trips-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.my-trips-empty-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 43px;
+  padding: 11px 16px;
+  border: 1px solid var(--forest);
+  border-radius: 9px;
+  color: var(--forest);
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.my-trips-empty-actions a:first-child {
+  color: white;
+  background: var(--forest);
+}
+
+.my-trips-storage-note {
+  max-width: 760px;
+  margin: 24px auto 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.9;
+  text-align: center;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+  .my-trip-card-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .my-trips-page {
+    padding: 24px 20px 48px;
+  }
+
+  .my-trips-heading {
+    margin-top: 36px;
+  }
+
+  .my-trips-heading h1 {
+    letter-spacing: -1px;
+  }
+
+  .my-trips-summary {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .my-trip-card {
+    padding: 20px;
+  }
+
+  .my-trip-card-top {
+    flex-direction: column;
+  }
+
+  .my-trip-card-details {
+    gap: 18px 12px;
+  }
+
+  .my-trip-card-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .my-trips-empty {
+    padding: 44px 20px;
+  }
+
+  .my-trips-empty-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .my-trips-empty-actions a {
+    width: 100%;
+  }
+}

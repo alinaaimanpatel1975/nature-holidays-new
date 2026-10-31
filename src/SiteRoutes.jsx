@@ -8,12 +8,14 @@ import {
 } from "react-router-dom";
 
 import App from "./App";
-import Footer from "./components/Footer";
 import PackageCatalogue from "./pages/PackagesPage";
 import DestinationsPage from "./pages/DestinationsPage";
 import DestinationDetails from "./pages/DestinationDetails";
 import ContactPage from "./pages/ContactPage";
 import ExplorePage from "./pages/ExplorePage";
+import EnquiryConfirmation from "./pages/EnquiryConfirmation";
+import MyTripsPage from "./pages/MyTripsPage";
+
 function ScrollToPage() {
   const { pathname } = useLocation();
 
@@ -24,100 +26,45 @@ function ScrollToPage() {
   return null;
 }
 
-function PackagesPage() {
+function NotFoundPage() {
   return (
-    <>
-      <header className="site-header">
-        <nav className="navbar" aria-label="Main navigation">
-          <Link className="brand" to="/">
-            <img src="/images/logo.png" alt="" />
-
-            <span>
-              Nature <strong>Holidays</strong>
-            </span>
-          </Link>
-
-          <div className="nav-links">
-            <Link to="/">Home</Link>
-            <Link to="/packages" aria-current="page">
-              Packages
-            </Link>
-          </div>
-        </nav>
-      </header>
-
-      <main
-        style={{
-          maxWidth: 1200,
-          margin: "0 auto",
-          padding: "64px 24px",
-          minHeight: "60vh",
-        }}
-      >
+    <main
+      style={{
+        minHeight: "70vh",
+        display: "grid",
+        placeItems: "center",
+        padding: "80px 24px",
+        textAlign: "center",
+      }}
+    >
+      <div>
         <p
           style={{
             color: "var(--muted)",
             fontSize: 11,
-            fontWeight: 600,
             letterSpacing: 2,
+            fontWeight: 600,
           }}
         >
-          EXPLORE NATURE HOLIDAYS
+          404 · PAGE NOT FOUND
         </p>
 
         <h1
           style={{
             marginTop: 16,
-            fontFamily: '"DM Sans", sans-serif',
-            fontSize: 38,
-            fontWeight: 600,
-            lineHeight: 1.2,
             color: "var(--forest)",
+            fontSize: 36,
           }}
         >
-          Find your next getaway.
+          This path ends here.
         </h1>
 
-        <p
-          style={{
-            marginTop: 20,
-            maxWidth: 500,
-            color: "var(--muted)",
-            fontSize: 14,
-            lineHeight: 1.8,
-          }}
-        >
-          Our package catalogue goes here next: school and college
-          trips, honeymoon escapes, group journeys and more.
+        <p style={{ margin: "16px 0 24px", color: "var(--muted)" }}>
+          Let's get you back to exploring.
         </p>
 
-        <Link
-          to="/"
-          style={{
-            display: "inline-block",
-            marginTop: 28,
-            color: "var(--forest)",
-            fontSize: 14,
-            fontWeight: 600,
-          }}
-        >
-          ← Back to home
-        </Link>
-      </main>
-
-      <Footer />
-    </>
-  );
-}
-
-function NotFoundPage() {
-  return (
-    <main style={{ padding: "80px 24px", textAlign: "center" }}>
-      <h1>Page not found</h1>
-      <p style={{ margin: "20px 0" }}>
-        Let’s get you back to exploring.
-      </p>
-      <Link to="/">Back to Nature Holidays</Link>
+        <Link to="/">Back to Nature Holidays</Link>
+      </div>
     </main>
   );
 }
@@ -129,14 +76,27 @@ export default function SiteRoutes() {
 
       <Routes>
         <Route path="/" element={<App />} />
+
         <Route path="/packages" element={<PackageCatalogue />} />
+
         <Route path="/destinations" element={<DestinationsPage />} />
+
         <Route
-  path="/destinations/:slug"
-  element={<DestinationDetails />}
-/>
-<Route path="/contact" element={<ContactPage />} />
-<Route path="/explore/:category" element={<ExplorePage />} />
+          path="/destinations/:slug"
+          element={<DestinationDetails />}
+        />
+
+        <Route path="/contact" element={<ContactPage />} />
+
+        <Route path="/explore/:category" element={<ExplorePage />} />
+
+        <Route
+          path="/enquiry-confirmation/:id"
+          element={<EnquiryConfirmation />}
+        />
+
+        <Route path="/my-trips" element={<MyTripsPage />} />
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

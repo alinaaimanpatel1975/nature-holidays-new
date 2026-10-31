@@ -1,0 +1,213 @@
+
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import {
+  getEnquiryById,
+  subscribeToEnquiryUpdates,
+} from "../utils/enquiryStorage";
+
+import "./EnquiryConfirmation.css";
+
+function formatDate(value) {
+  if (!value) return "Flexible / not decided";
+
+  return new Date(`${value}T00:00:00`).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function formatCreatedAt(value) {
+  if (!value) return "";
+
+  return new Date(value).toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+}
+
+export default function EnquiryConfirmation() {
+  const { id } = useParams();
+
+  const [enquiry, setEnquiry] = useState(() => getEnquiryById(id));
+  const [copyMessage, setCopyMessage] = useState("");
+
+  useEffect(() => {
+    function refreshEnquiry() {
+      setEnquiry(getEnquiryById(id));
+    }
+
+    refreshEnquiry();
+
+    return subscribeToEnquiryUpdates(refreshEnquiry);
+  }, [id]);
+
+  async function copyEmail() {
+    if (!enquiry?.email?.body) return;
+
+    try {
+      await navigator.clipboard.writeText(enquiry.email.body);
+      setCopyMessage("Email text copied.");
+    } catch {
+      setCopyMessage(
+        "Copy is unavailable in this browser. You can open the email draft instead."
+      );
+    }
+  }
+
+  if (!enquiry) {
+    return (
+      <>
+        <Navbar />
+
+        <main className="enquiry-missing">
+          <span className="enquiry-eyebrow">ENQUIRY NOT FOUND</span>
+          <h1>This enquiry isn't available here.</h1>
+          <p>
+            It may have been removed, or it may have been created
+            in a different browser.
+          </p>
+
+          <Link to="/contact" className="enquiry-primary-link">
+            Start a new enquiry
+          </Link>
+        </main>
+
+        <Footer />
+      </>
+    );
+  }
+
+  const { customer, trip, price, email } = enquiry;
+
+  return (
+    <>
+      <Navbar />
+
+      <main className="enquiry-confirmation-page">
+        <nav className="enquiry-breadcrumb" aria-label="Breadcrumb">
+          <Link to="/">Home</Link>
+          <span>/</span>
+          <Link to="/contact">Contact</Link>
+          <span>/</span>
+          <span aria-current="page">Enquiry details</span>
+        </nav>
+
+        <section className="enquiry-success-panel">
+          <div className="enquiry-success-icon" aria-hidden="true">✓</div>
+
+          <span className="enquiry-eyebrow">
+            YOUR ENQUIRY DRAFT IS SAVED
+          </span>
+
+          <h1>Your next chapter starts here.</h1>
+
+          <p>
+            Your details have been saved in this browser. One
+            final step: open the email draft, review it and send
+            it to the Nature Holidays team.
+          </p>
+
+          <div className="enquiry-reference">
+            <span>YOUR REFERENCE</span>
+            <strong>{enquiry.id}</strong>
+          </div>
+
+          <div className="enquiry-status-note" role="status">
+            <strong>Not sent yet</strong>
+            <span>
+              This is a locally saved enquiry draft, not a confirmed
+              booking or a message received by Nature Holidays.
+            </span>
+          </div>
+
+          <div className="enquiry-action-group">
+            {email?.link && (
+              <a className="enquiry-primary-link" href={email.link}>
+                Open email draft <span aria-hidden="true">↗</span>
+              </a>
+            )}
+
+            <button
+              type="button"
+              className="enquiry-secondary-button"
+              onClick={copyEmail}
+            >
+              Copy email text
+            </button>
+          </div>
+
+          <p className="enquiry-copy-status" role="status">
+            {copyMessage}
+          </p>
+        </section>
+
+        <section className="enquiry-details-panel">
+          <div className="enquiry-details-heading">
+            <div>
+              <span className="enquiry-eyebrow">A LITTLE RECAP</span>
+              <h2>Your trip details.</h2>
+            </div>
+
+            <span className="enquiry-created">
+              Saved {formatCreatedAt(enquiry.createdAt)}
+            </span>
+          </div>
+
+          <div className="enquiry-detail-grid">
+            <div className="enquiry-detail-item">
+              <span>Package</span>
+              <strong>{trip.packageName || "Custom trip"}</strong>
+            </div>
+            <div className="enquiry-detail-item">
+              <span>Destination</span>
+              <strong>{trip.destination || "Not specified"}</strong>
+            </div>
+            <div className="enquiry-detail-item">
+              <span>Travel date</span>
+              <strong>{formatDate(trip.travelDate)}</strong>
+            </div>
+            <div className="enquiry-detail-item">
+              <span>Travellers</span>
+              <strong>{trip.travellers}</strong>
+            </div>
+            <div className="enquiry-detail-item">
+              <span>Trip type</span>
+              <strong>{trip.tripType || "Not specified"}</strong>
+            </div>
+            <div className="enquiry-detail-item">
+              <span>Departure city</span>
+              <strong>{trip.departureCity || "Not specified"}</strong>
+            </div>
+            <div className="enquiry-detail-item">
+              <span>Displayed estimate</span>
+              <strong>{price?.label || "Price on request"}</strong>
+            </div>
+            <div className="enquiry-detail-item">
+              <span>Contact name</span>
+              <strong>{customer.name}</strong>
+            </div>
+          </div>
+
+          {trip.requests && (
+            <div className="enquiry-special-requests">
+              <span>Additional requirements</span>
+              <p>{trip.requests}</p>
+            </div>
+          )}
+        </section>
+
+        <div className="enquiry-bottom-links">
+          <Link to="/my-trips">View My Trips ↗</Link>
+          <Link to="/packages">Explore more packages</Link>
+        </div>
+      </main>
+
+      <Footer />
+    </>
+  );
+}

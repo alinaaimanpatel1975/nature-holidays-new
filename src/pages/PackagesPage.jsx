@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
-import {
-  Link,
-  useLocation,
-  useSearchParams,
-} from "react-router-dom";
 
+import { useEffect, useState } from "react";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
+
+import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "./PackagesPage.css";
 import BrochureTours from "../components/BrochureTours";
@@ -18,9 +16,9 @@ const categories = [
   { id: "weekend", name: "Weekend & Day Outings" },
 ];
 
-// Tour names are from the brochure.
-// Audience filters are initial browsing suggestions,
-// pending the client's confirmation of individual packages.
+const PRICE_NOTE =
+  "Indicative estimate only. Final pricing depends on travel dates, accommodation, group size and confirmed inclusions.";
+
 const packages = [
   {
     id: "mysore-ooty",
@@ -30,8 +28,12 @@ const packages = [
     route: "Mysore → Ooty",
     type: "Cities & hill stations",
     categories: ["family", "school-college"],
+    primaryTripType: "Family Holiday",
+    startingPrice: 12999,
+    priceBasis: "per person · twin-sharing",
     overview:
       "Combine Mysore sightseeing with an Ooty hill-station visit. Contact the team for the current route and sightseeing schedule.",
+    priceNote: PRICE_NOTE,
   },
   {
     id: "munnar-alleppey-kochi",
@@ -41,8 +43,12 @@ const packages = [
     route: "Munnar → Alleppey → Kochi",
     type: "Kerala getaway",
     categories: ["family", "honeymoon"],
+    primaryTripType: "Honeymoon",
+    startingPrice: 17999,
+    priceBasis: "per person · twin-sharing",
     overview:
       "Explore a journey through Munnar, Alleppey and Kochi. Ask the team about accommodation choices, transport and the available itinerary.",
+    priceNote: PRICE_NOTE,
   },
   {
     id: "raj-se-taj-tak",
@@ -52,8 +58,12 @@ const packages = [
     route: "Final route available on request",
     type: "Heritage tour",
     categories: ["family", "school-college"],
+    primaryTripType: "Family Holiday",
+    startingPrice: 11999,
+    priceBasis: "per person · twin-sharing",
     overview:
       "A heritage tour listed in the Nature Holidays brochure. Request the current itinerary to confirm destinations, monuments and departure options.",
+    priceNote: PRICE_NOTE,
   },
   {
     id: "goa-dandeli",
@@ -63,19 +73,28 @@ const packages = [
     route: "Goa → Dandeli",
     type: "Coast & nature",
     categories: ["family", "corporate-group"],
+    primaryTripType: "Corporate & Group",
+    startingPrice: 22999,
+    priceBasis: "per person · twin-sharing",
     overview:
       "Explore a combined Goa and Dandeli trip. Activities, accommodation, transport and the final travel schedule require confirmation.",
+    priceNote: PRICE_NOTE,
   },
   {
     id: "nandi-hills-isha-temple",
     name: "Nandi Hills & Isha Temple",
     location: "Karnataka",
     image: "/images/package-nandi-hills.jpg",
-    route: "Nandi Hills → Isha Temple",
+    route: "Route and schedule to be confirmed",
     type: "Day outing",
     categories: ["weekend", "school-college", "corporate-group"],
+    primaryTripType: "Weekend & Day Outing",
+    startingPrice: null,
+    priceBasis: "",
     overview:
-      "A local outing listed in the brochure. Confirm pickup arrangements, timings, sightseeing stops and group requirements with the team.",
+      "A local outing listed in the brochure. Confirm the route, pickup arrangements, timings, sightseeing stops and group requirements with the team.",
+    priceNote:
+      "Price on request. The route and travel schedule need confirmation before a reliable estimate can be shown.",
   },
   {
     id: "hampi-pattadakal",
@@ -85,39 +104,56 @@ const packages = [
     route: "Hampi → Pattadakal",
     type: "Heritage tour",
     categories: ["family", "school-college"],
+    primaryTripType: "Family Holiday",
+    startingPrice: 10999,
+    priceBasis: "per person · twin-sharing",
     overview:
       "Discover a heritage itinerary featuring Hampi and Pattadakal. Request the detailed sightseeing plan and available travel arrangements.",
+    priceNote: PRICE_NOTE,
   },
 ];
 
-function getEnquiryLink(packageName) {
-  const subject = `Package enquiry: ${packageName}`;
-  const body = [
-    `Hello Nature Holidays,`,
-    "",
-    `I'm interested in ${packageName}.`,
-    "",
-    "Preferred travel dates:",
-    "Number of adults:",
-    "Number of children:",
-    "Departure city:",
-    "Accommodation preference:",
-    "Other requirements:",
-    "",
-    "Please share the itinerary, inclusions and a quote.",
-  ].join("\n");
+function localDate() {
+  const date = new Date();
 
-  return (
-    `mailto:info@natureholidays.co` +
-    `?subject=${encodeURIComponent(subject)}` +
-    `&body=${encodeURIComponent(body)}`
-  );
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
+function formatPrice(amount) {
+  return new Intl.NumberFormat("en-IN").format(amount);
+}
+
+function getEnquiryUrl(trip, travelDate, travellers) {
+  const params = new URLSearchParams();
+
+  params.set("package", trip.name);
+  params.set("packageId", trip.id);
+  params.set("tripType", trip.primaryTripType);
+  params.set("travellers", String(travellers));
+
+  if (travelDate) params.set("date", travelDate);
+
+  if (trip.startingPrice) {
+    params.set("price", String(trip.startingPrice));
+    params.set("priceBasis", trip.priceBasis);
+  }
+
+  return `/contact?${params.toString()}`;
 }
 
 export default function PackagesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { hash } = useLocation();
+
   const [openPackage, setOpenPackage] = useState(null);
+  const [travelDate, setTravelDate] = useState(
+    searchParams.get("date") || ""
+  );
+  const [travellers, setTravellers] = useState("2");
 
   const query = searchParams.get("q") || "";
   const requestedCategory = searchParams.get("category") || "all";
@@ -145,7 +181,6 @@ export default function PackagesPage() {
     );
   });
 
-  // Keep a directly linked package accessible even if URL filters differ.
   const visiblePackages =
     linkedPackage &&
     !filteredPackages.some((trip) => trip.id === linkedPackage.id)
@@ -153,9 +188,7 @@ export default function PackagesPage() {
       : filteredPackages;
 
   useEffect(() => {
-    if (!linkedPackage) {
-      return;
-    }
+    if (!linkedPackage) return;
 
     setOpenPackage(linkedPackage.id);
 
@@ -183,28 +216,7 @@ export default function PackagesPage() {
 
   return (
     <>
-      <header className="site-header">
-        <nav className="navbar" aria-label="Main navigation">
-          <Link
-            className="brand"
-            to="/"
-            aria-label="Nature Holidays home"
-          >
-            <img src="/images/logo.png" alt="" />
-            <span>
-              Nature <strong>Holidays</strong>
-            </span>
-          </Link>
-
-          <div className="nav-links">
-            <Link to="/">Home</Link>
-            <Link to="/packages" aria-current="page">
-              Packages
-            </Link>
-            <a href="#package-contact">Contact</a>
-          </div>
-        </nav>
-      </header>
+      <Navbar />
 
       <main className="package-page">
         <nav className="package-breadcrumb" aria-label="Breadcrumb">
@@ -217,13 +229,8 @@ export default function PackagesPage() {
           <span className="package-page-eyebrow">
             EXPLORE NATURE HOLIDAYS
           </span>
-
           <h1>Find a trip that fits your plans.</h1>
-
-          <p>
-            Explore destinations, compare ideas and talk to our
-            team about your next trip.
-          </p>
+          <p>Pick a place. Find your dates. We'll help with the details.</p>
         </div>
 
         <label className="package-search">
@@ -247,7 +254,6 @@ export default function PackagesPage() {
             value={query}
             onChange={(event) => updateFilter("q", event.target.value)}
           />
-
           <span>Search packages</span>
         </label>
 
@@ -274,7 +280,6 @@ export default function PackagesPage() {
 
         <div className="package-results-heading">
           <h2>Explore our packages</h2>
-
           <p role="status">
             {visiblePackages.length}{" "}
             {visiblePackages.length === 1 ? "package" : "packages"}
@@ -305,21 +310,52 @@ export default function PackagesPage() {
                       loading="lazy"
                       decoding="async"
                     />
-
                     <span>{trip.type}</span>
                   </div>
 
                   <div className="catalogue-card-content">
-                    <p className="catalogue-location">
-                      {trip.location}
-                    </p>
-
+                    <p className="catalogue-location">{trip.location}</p>
                     <h3>{trip.name}</h3>
-
                     <p className="catalogue-route">{trip.route}</p>
 
                     <div className="catalogue-card-actions">
-                      <span>Price on request</span>
+                      <span
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "3px",
+                        }}
+                      >
+                        {trip.startingPrice ? (
+                          <>
+                            <strong
+                              style={{
+                                color: "var(--forest)",
+                                fontSize: "15px",
+                              }}
+                            >
+                              From ₹{formatPrice(trip.startingPrice)}
+                            </strong>
+                            <small
+                              style={{
+                                color: "var(--muted)",
+                                fontSize: "10px",
+                              }}
+                            >
+                              / person · indicative estimate
+                            </small>
+                          </>
+                        ) : (
+                          <strong
+                            style={{
+                              color: "var(--forest)",
+                              fontSize: "13px",
+                            }}
+                          >
+                            Price on request
+                          </strong>
+                        )}
+                      </span>
 
                       <button
                         type="button"
@@ -330,9 +366,7 @@ export default function PackagesPage() {
                         }
                       >
                         {isOpen ? "Close details" : "View package"}
-                        <span aria-hidden="true">
-                          {isOpen ? "−" : "↗"}
-                        </span>
+                        <span aria-hidden="true">{isOpen ? "−" : "↗"}</span>
                       </button>
                     </div>
 
@@ -346,22 +380,119 @@ export default function PackagesPage() {
 
                       <dl>
                         <div>
-                          <dt>Duration & dates</dt>
-                          <dd>Confirm with our team</dd>
+                          <dt>Starting price</dt>
+                          <dd>
+                            {trip.startingPrice
+                              ? `₹${formatPrice(trip.startingPrice)} / person`
+                              : "Quote on request"}
+                          </dd>
                         </div>
                         <div>
-                          <dt>Inclusions & exclusions</dt>
-                          <dd>Request the current package details</dd>
+                          <dt>Price basis</dt>
+                          <dd>{trip.priceBasis || "To be confirmed"}</dd>
+                        </div>
+                        <div>
+                          <dt>Itinerary & inclusions</dt>
+                          <dd>Confirm the latest details with our team</dd>
                         </div>
                       </dl>
 
+                      <p
+                        style={{
+                          marginTop: "14px",
+                          color: "var(--muted)",
+                          fontSize: "11px",
+                          lineHeight: 1.7,
+                        }}
+                      >
+                        {trip.priceNote}
+                      </p>
+
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns:
+                            "repeat(auto-fit, minmax(150px, 1fr))",
+                          gap: "14px",
+                          marginTop: "22px",
+                        }}
+                      >
+                        <label
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "7px",
+                            color: "var(--forest)",
+                            fontSize: "12px",
+                            fontWeight: 600,
+                          }}
+                        >
+                          Preferred travel date
+                          <input
+                            type="date"
+                            min={localDate()}
+                            value={travelDate}
+                            onChange={(event) =>
+                              setTravelDate(event.target.value)
+                            }
+                            style={{
+                              width: "100%",
+                              minHeight: "44px",
+                              padding: "10px",
+                              border: "1px solid var(--border)",
+                              borderRadius: "8px",
+                              color: "var(--text)",
+                              background: "var(--ivory)",
+                              font: "inherit",
+                            }}
+                          />
+                        </label>
+
+                        <label
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "7px",
+                            color: "var(--forest)",
+                            fontSize: "12px",
+                            fontWeight: 600,
+                          }}
+                        >
+                          Number of travellers
+                          <input
+                            type="number"
+                            min="1"
+                            max="5000"
+                            step="1"
+                            value={travellers}
+                            onChange={(event) =>
+                              setTravellers(event.target.value)
+                            }
+                            style={{
+                              width: "100%",
+                              minHeight: "44px",
+                              padding: "10px",
+                              border: "1px solid var(--border)",
+                              borderRadius: "8px",
+                              color: "var(--text)",
+                              background: "var(--ivory)",
+                              font: "inherit",
+                            }}
+                          />
+                        </label>
+                      </div>
+
                       <Link
-  className="catalogue-enquire"
-  to={`/contact?package=${encodeURIComponent(trip.name)}`}
->
-  Enquire about this trip
-  <span aria-hidden="true">↗</span>
-</Link>
+                        className="catalogue-enquire"
+                        to={getEnquiryUrl(
+                          trip,
+                          travelDate,
+                          Math.min(5000, Math.max(1, Number(travellers) || 1))
+                        )}
+                      >
+                        Continue to enquiry
+                        <span aria-hidden="true">↗</span>
+                      </Link>
                     </div>
                   </div>
                 </article>
@@ -371,33 +502,28 @@ export default function PackagesPage() {
         ) : (
           <div className="package-empty">
             <h3>No matching packages yet.</h3>
-            <p>
-              Try another destination or ask us about a custom trip.
-            </p>
-
-            <button
-              type="button"
-              onClick={() => setSearchParams({})}
-            >
+            <p>Try another destination or ask us about a custom trip.</p>
+            <button type="button" onClick={() => setSearchParams({})}>
               Clear filters
             </button>
           </div>
         )}
 
         <BrochureTours />
+
         <section className="package-custom-trip" id="package-contact">
           <div>
-            <h2>Planning something different?</h2>
+            <h2>Have somewhere else in mind?</h2>
             <p>
-              Tell us your destination, dates and group size.
-              Let’s explore your options.
+              Share your destination, dates and group size.
+              We'll help shape the journey.
             </p>
           </div>
 
           <Link to="/contact">
-  Plan a custom trip
-  <span aria-hidden="true">↗</span>
-</Link>
+            Plan a custom trip
+            <span aria-hidden="true">↗</span>
+          </Link>
         </section>
       </main>
 
