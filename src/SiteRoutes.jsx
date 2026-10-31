@@ -30,7 +30,7 @@ function PackagesPage() {
       <header className="site-header">
         <nav className="navbar" aria-label="Main navigation">
           <Link className="brand" to="/">
-            <img src={`${import.meta.env.BASE_URL}images/logo.png`} alt="" />
+            <img src="/images/logo.png" alt="" />
 
             <span>
               Nature <strong>Holidays</strong>
@@ -124,7 +124,7 @@ function NotFoundPage() {
 
 export default function SiteRoutes() {
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <BrowserRouter>
       <ScrollToPage />
 
       <Routes>
