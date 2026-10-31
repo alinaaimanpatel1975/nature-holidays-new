@@ -29,6 +29,10 @@ jobs:
       - name: Build website
         run: npm run build -- --base=/nature-holidays-new/
 
+      - name: Fix public image paths
+        run: |
+          find dist -type f \( -name '*.js' -o -name '*.css' -o -name '*.html' -o -name '*.json' -o -name '*.svg' \) -exec sed -i 's|/images/|/nature-holidays-new/images/|g' {} +
+
       - name: Upload production build
         uses: actions/upload-pages-artifact@v3
         with:
