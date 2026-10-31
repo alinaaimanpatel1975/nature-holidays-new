@@ -124,7 +124,7 @@ function NotFoundPage() {
 
 export default function SiteRoutes() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <ScrollToPage />
 
       <Routes>
