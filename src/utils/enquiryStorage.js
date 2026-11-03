@@ -1,22 +1,42 @@
-const STORAGE_KEY = "nature-holidays-enquiries";
 
+const STORAGE_KEY = "nature-holidays-enquiries";
 const UPDATE_EVENT = "nature-holidays-enquiries-updated";
 
 function notifyUpdate() {
   window.dispatchEvent(new Event(UPDATE_EVENT));
 }
 
+function normalizeEnquiry(enquiry) {
+  if (!enquiry || typeof enquiry !== "object") {
+    return enquiry;
+  }
+
+  // Older records were labelled as drafts even though
+  // they were successfully submitted to the backend.
+  const status =
+    !enquiry.status ||
+    enquiry.status === "Draft — not sent" ||
+    enquiry.status === "Draft - not sent"
+      ? "new"
+      : enquiry.status;
+
+  return {
+    ...enquiry,
+    status,
+  };
+}
+
 export function getAllEnquiries() {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
 
-    if (!stored) {
-      return [];
-    }
+    if (!stored) return [];
 
     const parsed = JSON.parse(stored);
 
-    return Array.isArray(parsed) ? parsed : [];
+    if (!Array.isArray(parsed)) return [];
+
+    return parsed.map(normalizeEnquiry);
   } catch (error) {
     console.error("Could not read saved enquiries:", error);
     return [];
@@ -30,9 +50,14 @@ export function getEnquiryById(id) {
 export function saveEnquiry(enquiry) {
   const enquiries = getAllEnquiries();
 
+  const submittedEnquiry = normalizeEnquiry({
+    ...enquiry,
+    status: "new",
+  });
+
   const updatedEnquiries = [
-    enquiry,
-    ...enquiries.filter((item) => item.id !== enquiry.id),
+    submittedEnquiry,
+    ...enquiries.filter((item) => item.id !== submittedEnquiry.id),
   ];
 
   localStorage.setItem(
@@ -42,7 +67,7 @@ export function saveEnquiry(enquiry) {
 
   notifyUpdate();
 
-  return enquiry.id;
+  return submittedEnquiry.id;
 }
 
 export function deleteEnquiry(id) {

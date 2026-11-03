@@ -32,6 +32,18 @@ function formatSavedDate(value) {
   });
 }
 
+function getStatusLabel(status) {
+  const statuses = {
+    new: "Enquiry submitted",
+    contacted: "Contacted",
+    quoted: "Quote received",
+    confirmed: "Trip confirmed",
+    cancelled: "Cancelled",
+  };
+
+  return statuses[status] || "Enquiry submitted";
+}
+
 export default function MyTripsPage() {
   const [enquiries, setEnquiries] = useState(() => getAllEnquiries());
 
@@ -47,7 +59,7 @@ export default function MyTripsPage() {
 
   function removeEnquiry(id) {
     const confirmed = window.confirm(
-      "Remove this saved enquiry draft from this browser?"
+      "Remove this enquiry from My Trips on this browser? This will not delete the enquiry from Nature Holidays' records."
     );
 
     if (!confirmed) return;
@@ -71,23 +83,24 @@ export default function MyTripsPage() {
           <span className="my-trips-eyebrow">YOUR TRAVEL SPACE</span>
           <h1>Your trips, all in one place.</h1>
           <p>
-            Revisit the trip enquiries you've prepared in this browser.
-            Your next getaway might be closer than you think.
+            Keep track of the travel enquiries you've submitted and revisit
+            their details whenever you need.
           </p>
         </section>
 
         <div className="my-trips-summary">
           <div>
-            <span>SAVED ENQUIRIES</span>
+            <span>SUBMITTED ENQUIRIES</span>
             <strong>{enquiries.length}</strong>
           </div>
           <p>
-            These are locally saved enquiry drafts, not confirmed bookings.
+            An enquiry is not a confirmed booking. Your trip is confirmed
+            only after Nature Holidays verifies its availability and details.
           </p>
         </div>
 
         {enquiries.length > 0 ? (
-          <section className="my-trips-list" aria-label="Saved enquiries">
+          <section className="my-trips-list" aria-label="Submitted enquiries">
             {enquiries.map((enquiry) => (
               <article className="my-trip-card" key={enquiry.id}>
                 <div className="my-trip-card-top">
@@ -95,6 +108,7 @@ export default function MyTripsPage() {
                     <span className="my-trip-card-eyebrow">
                       {enquiry.trip?.tripType || "TRAVEL ENQUIRY"}
                     </span>
+
                     <h2>
                       {enquiry.trip?.packageName ||
                         enquiry.trip?.destination ||
@@ -102,7 +116,9 @@ export default function MyTripsPage() {
                     </h2>
                   </div>
 
-                  <span className="my-trip-status">Draft · Not sent</span>
+                  <span className="my-trip-status">
+                    {getStatusLabel(enquiry.status)}
+                  </span>
                 </div>
 
                 <div className="my-trip-card-details">
@@ -112,18 +128,21 @@ export default function MyTripsPage() {
                       {enquiry.trip?.destination || "Not specified"}
                     </strong>
                   </div>
+
                   <div>
                     <span>Travel date</span>
                     <strong>{formatDate(enquiry.trip?.travelDate)}</strong>
                   </div>
+
                   <div>
                     <span>Travellers</span>
                     <strong>
                       {enquiry.trip?.travellers || "Not specified"}
                     </strong>
                   </div>
+
                   <div>
-                    <span>Saved on</span>
+                    <span>Submitted on</span>
                     <strong>{formatSavedDate(enquiry.createdAt)}</strong>
                   </div>
                 </div>
@@ -155,11 +174,15 @@ export default function MyTripsPage() {
           </section>
         ) : (
           <section className="my-trips-empty">
-            <div className="my-trips-empty-icon" aria-hidden="true">↗</div>
+            <div className="my-trips-empty-icon" aria-hidden="true">
+              ↗
+            </div>
+
             <span className="my-trips-eyebrow">A FRESH PAGE</span>
-            <h2>No saved trips just yet.</h2>
+            <h2>No trips just yet.</h2>
+
             <p>
-              When you prepare a travel enquiry, it will appear here
+              Once you submit a travel enquiry, it will appear here
               so you can revisit its details.
             </p>
 
@@ -171,9 +194,9 @@ export default function MyTripsPage() {
         )}
 
         <p className="my-trips-storage-note">
-          Your saved enquiries are stored only in this browser on this
-          device. They won't automatically appear on another phone or
-          computer. Account-based syncing will require a backend.
+          My Trips currently saves a copy in this browser on this device.
+          Your submitted enquiry is also recorded in Nature Holidays'
+          database. The two are not yet synchronised for account-based access.
         </p>
       </main>
 

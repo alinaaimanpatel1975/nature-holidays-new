@@ -129,6 +129,7 @@ export default function ContactPage() {
   });
 
   const [storageError, setStorageError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setForm((current) => ({
@@ -160,56 +161,21 @@ export default function ContactPage() {
     setStorageError("");
   }
 
-  function prepareEnquiry(event) {
+  async function prepareEnquiry(event) {
     event.preventDefault();
+
+    if (isSubmitting) return;
+
     setStorageError("");
+    setIsSubmitting(true);
 
     const reference = createEnquiryReference();
     const date = formatTravelDate(form.travelDate);
 
-    const priceDetails = selectedPrice
-      ? `₹${formatPrice(selectedPrice)} / person (${selectedPriceBasis}; indicative estimate only)`
-      : hasPackageSelection
-        ? "Price on request"
-        : "Not applicable";
-
-    const subject = form.packageName.trim()
-      ? `Travel enquiry: ${form.packageName.trim()}`
-      : `Travel enquiry: ${form.destination.trim() || form.tripType}`;
-
-    const body = [
-      "Hello Nature Holidays,",
-      "",
-      "I'd like help planning a trip.",
-      "",
-      `Enquiry reference: ${reference}`,
-      `Name: ${form.name.trim()}`,
-      `Email: ${form.email.trim()}`,
-      `Phone: ${form.phone.trim()}`,
-      `Package: ${form.packageName.trim() || "Custom trip"}`,
-      `Indicative package price: ${priceDetails}`,
-      `Trip type: ${form.tripType || "Not specified"}`,
-      `Destination: ${form.destination.trim() || "Please suggest options"}`,
-      `Preferred travel date: ${date}`,
-      `Number of travellers: ${form.travellers}`,
-      `Departure city: ${form.departureCity.trim() || "Not specified"}`,
-      "",
-      "Additional requirements:",
-      form.requests.trim() || "None specified",
-      "",
-      "Please share suitable options, the current itinerary,",
-      "confirmed inclusions, exclusions, availability and a final quote.",
-    ].join("\n");
-
-    const emailLink =
-      "mailto:info@natureholidays.co" +
-      `?subject=${encodeURIComponent(subject)}` +
-      `&body=${encodeURIComponent(body)}`;
-
     const enquiryRecord = {
       id: reference,
       createdAt: new Date().toISOString(),
-      status: "Draft — not sent",
+      status: "new",
       customer: {
         name: form.name.trim(),
         email: form.email.trim(),
@@ -229,25 +195,47 @@ export default function ContactPage() {
         basis: selectedPriceBasis,
         label: indicativePriceLabel,
       },
-      email: {
-        subject,
-        body,
-        link: emailLink,
-      },
     };
 
     try {
+      const response = await fetch("http://localhost:5000/api/enquiries", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          reference: enquiryRecord.id,
+          customer: enquiryRecord.customer,
+          trip: enquiryRecord.trip,
+          price: {
+            amount: enquiryRecord.price.amount,
+            basis: enquiryRecord.price.basis,
+          },
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Could not save your enquiry.");
+      }
+
+      // Save the browser copy only after MongoDB confirms success.
       saveEnquiry(enquiryRecord);
 
+      // Customer stays on the website and sees the confirmation page.
       navigate(
         `/enquiry-confirmation/${encodeURIComponent(reference)}`
       );
     } catch (error) {
-      console.error("Could not save enquiry:", error);
+      console.error("Could not submit enquiry:", error);
 
       setStorageError(
-        "Your enquiry could not be saved in this browser. Check your browser storage settings and try again."
+        error.message ||
+          "Your enquiry could not be submitted. Please check your connection and try again."
       );
+
+      setIsSubmitting(false);
     }
   }
 
@@ -289,6 +277,7 @@ export default function ContactPage() {
               <h2 id="trip-enquiry-title">
                 {hasPackageSelection ? "Your trip details." : "Plan your trip."}
               </h2>
+
               <p>Share your plans below. Fields marked * are required.</p>
             </div>
 
@@ -345,9 +334,14 @@ export default function ContactPage() {
                     onChange={updateField}
                     required
                   >
-                    <option value="" disabled>Choose your trip type</option>
+                    <option value="" disabled>
+                      Choose your trip type
+                    </option>
+
                     {tripTypes.map((type) => (
-                      <option key={type} value={type}>{type}</option>
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
                     ))}
                   </select>
                 </label>
@@ -371,6 +365,7 @@ export default function ContactPage() {
                       readOnly
                       aria-label="Displayed indicative package estimate"
                     />
+
                     <span
                       style={{
                         color: "var(--muted)",
@@ -446,10 +441,11 @@ export default function ContactPage() {
               </div>
 
               <p className="trip-form-note">
-                Your enquiry will be saved in this browser and prepared
-                as an email draft. Review it and send it through your
-                email app. Any displayed starting price is an estimate,
-                not a confirmed offer. No booking is made by this form.
+                Your enquiry will be submitted to Nature Holidays and saved
+                in its database. Once submission is successful, you'll see
+                a confirmation on this website. Any displayed starting
+                price is an estimate, not a confirmed offer. This form
+                does not confirm a booking.
               </p>
 
               {storageError && (
@@ -466,8 +462,13 @@ export default function ContactPage() {
                 </p>
               )}
 
-              <button className="trip-prepare-button" type="submit">
-                Prepare my enquiry
+              <button
+                className="trip-prepare-button"
+                type="submit"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Submitting your enquiry..." : "Submit trip enquiry"}
+
                 <span aria-hidden="true">↗</span>
               </button>
             </form>
@@ -477,6 +478,7 @@ export default function ContactPage() {
             <div className="contact-direct-panel">
               <span className="contact-eyebrow">LET'S TALK</span>
               <h2>Prefer a conversation?</h2>
+
               <p>
                 Contact the Nature Holidays team directly about your travel plans.
               </p>

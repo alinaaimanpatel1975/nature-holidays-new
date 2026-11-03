@@ -34,7 +34,6 @@ export default function EnquiryConfirmation() {
   const { id } = useParams();
 
   const [enquiry, setEnquiry] = useState(() => getEnquiryById(id));
-  const [copyMessage, setCopyMessage] = useState("");
 
   useEffect(() => {
     function refreshEnquiry() {
@@ -45,19 +44,6 @@ export default function EnquiryConfirmation() {
 
     return subscribeToEnquiryUpdates(refreshEnquiry);
   }, [id]);
-
-  async function copyEmail() {
-    if (!enquiry?.email?.body) return;
-
-    try {
-      await navigator.clipboard.writeText(enquiry.email.body);
-      setCopyMessage("Email text copied.");
-    } catch {
-      setCopyMessage(
-        "Copy is unavailable in this browser. You can open the email draft instead."
-      );
-    }
-  }
 
   if (!enquiry) {
     return (
@@ -82,7 +68,7 @@ export default function EnquiryConfirmation() {
     );
   }
 
-  const { customer, trip, price, email } = enquiry;
+  const { customer, trip, price } = enquiry;
 
   return (
     <>
@@ -98,52 +84,35 @@ export default function EnquiryConfirmation() {
         </nav>
 
         <section className="enquiry-success-panel">
-          <div className="enquiry-success-icon" aria-hidden="true">✓</div>
+          <div className="enquiry-success-icon" aria-hidden="true">
+            ✓
+          </div>
 
           <span className="enquiry-eyebrow">
-            YOUR ENQUIRY DRAFT IS SAVED
+            YOUR ENQUIRY HAS BEEN RECEIVED
           </span>
 
           <h1>Your next chapter starts here.</h1>
 
           <p>
-            Your details have been saved in this browser. One
-            final step: open the email draft, review it and send
-            it to the Nature Holidays team.
+            Your travel enquiry has been successfully submitted
+            and saved. The Nature Holidays team can now review
+            your requirements and follow up with suitable options.
           </p>
 
           <div className="enquiry-reference">
-            <span>YOUR REFERENCE</span>
+            <span>YOUR ENQUIRY REFERENCE</span>
             <strong>{enquiry.id}</strong>
           </div>
 
           <div className="enquiry-status-note" role="status">
-            <strong>Not sent yet</strong>
+            <strong>Enquiry submitted · Awaiting response</strong>
             <span>
-              This is a locally saved enquiry draft, not a confirmed
-              booking or a message received by Nature Holidays.
+              Your enquiry is recorded, but your trip is not yet
+              confirmed. Final pricing and availability must be
+              verified by Nature Holidays.
             </span>
           </div>
-
-          <div className="enquiry-action-group">
-            {email?.link && (
-              <a className="enquiry-primary-link" href={email.link}>
-                Open email draft <span aria-hidden="true">↗</span>
-              </a>
-            )}
-
-            <button
-              type="button"
-              className="enquiry-secondary-button"
-              onClick={copyEmail}
-            >
-              Copy email text
-            </button>
-          </div>
-
-          <p className="enquiry-copy-status" role="status">
-            {copyMessage}
-          </p>
         </section>
 
         <section className="enquiry-details-panel">
@@ -154,7 +123,7 @@ export default function EnquiryConfirmation() {
             </div>
 
             <span className="enquiry-created">
-              Saved {formatCreatedAt(enquiry.createdAt)}
+              Submitted {formatCreatedAt(enquiry.createdAt)}
             </span>
           </div>
 
@@ -163,30 +132,37 @@ export default function EnquiryConfirmation() {
               <span>Package</span>
               <strong>{trip.packageName || "Custom trip"}</strong>
             </div>
+
             <div className="enquiry-detail-item">
               <span>Destination</span>
               <strong>{trip.destination || "Not specified"}</strong>
             </div>
+
             <div className="enquiry-detail-item">
               <span>Travel date</span>
               <strong>{formatDate(trip.travelDate)}</strong>
             </div>
+
             <div className="enquiry-detail-item">
               <span>Travellers</span>
               <strong>{trip.travellers}</strong>
             </div>
+
             <div className="enquiry-detail-item">
               <span>Trip type</span>
               <strong>{trip.tripType || "Not specified"}</strong>
             </div>
+
             <div className="enquiry-detail-item">
               <span>Departure city</span>
               <strong>{trip.departureCity || "Not specified"}</strong>
             </div>
+
             <div className="enquiry-detail-item">
               <span>Displayed estimate</span>
               <strong>{price?.label || "Price on request"}</strong>
             </div>
+
             <div className="enquiry-detail-item">
               <span>Contact name</span>
               <strong>{customer.name}</strong>
