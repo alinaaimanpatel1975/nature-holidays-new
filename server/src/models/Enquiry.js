@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+﻿import mongoose from "mongoose";
 
 const enquirySchema = new mongoose.Schema(
   {
@@ -29,6 +29,14 @@ const enquirySchema = new mongoose.Schema(
       basis: { type: String, default: "" },
     },
 
+    internalNotes: [
+      {
+        text: { type: String, required: true, trim: true },
+        author: { type: String, default: "Admin" },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
+
     status: {
       type: String,
       enum: ["new", "contacted", "quoted", "confirmed", "cancelled"],
@@ -41,3 +49,4 @@ const enquirySchema = new mongoose.Schema(
 const Enquiry = mongoose.model("Enquiry", enquirySchema);
 
 export default Enquiry;
+

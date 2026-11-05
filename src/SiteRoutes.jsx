@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+﻿import { useEffect } from "react";
 import {
   BrowserRouter,
   Link,
@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 
 import App from "./App";
+import WhatsAppButton from "./components/WhatsAppButton";
 import PackageCatalogue from "./pages/PackagesPage";
 import DestinationsPage from "./pages/DestinationsPage";
 import DestinationDetails from "./pages/DestinationDetails";
@@ -15,6 +16,13 @@ import ContactPage from "./pages/ContactPage";
 import ExplorePage from "./pages/ExplorePage";
 import EnquiryConfirmation from "./pages/EnquiryConfirmation";
 import MyTripsPage from "./pages/MyTripsPage";
+import {
+  AdminLogin,
+  AdminLayout,
+  AdminOverview,
+  AdminEnquiries,
+  AdminBookings,
+} from "./admin/AdminApp";
 
 function ScrollToPage() {
   const { pathname } = useLocation();
@@ -46,7 +54,7 @@ function NotFoundPage() {
             fontWeight: 600,
           }}
         >
-          404 · PAGE NOT FOUND
+          404 Â· PAGE NOT FOUND
         </p>
 
         <h1
@@ -69,13 +77,23 @@ function NotFoundPage() {
   );
 }
 
+function WhatsAppGlobal() {
+  const { pathname } = useLocation();
+
+  if (pathname.startsWith("/admin")) return null;
+
+  return <WhatsAppButton />;
+}
+
 export default function SiteRoutes() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <ScrollToPage />
+      <WhatsAppGlobal />
 
       <Routes>
         <Route path="/" element={<App />} />
+      
 
         <Route path="/packages" element={<PackageCatalogue />} />
 
@@ -96,9 +114,17 @@ export default function SiteRoutes() {
         />
 
         <Route path="/my-trips" element={<MyTripsPage />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminOverview />} />
+          <Route path="enquiries" element={<AdminEnquiries />} />
+          <Route path="bookings" element={<AdminBookings />} />
+        </Route>
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
 }
+
+

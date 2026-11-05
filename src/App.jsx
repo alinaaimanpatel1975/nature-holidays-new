@@ -1,4 +1,4 @@
-
+﻿
 import { useEffect, useState } from "react";
 import "./App.css";
 import useHeroTransition from "./useHeroTransition";
@@ -227,6 +227,8 @@ export default function App() {
               Find your experience
               <span aria-hidden="true">↗</span>
             </a>
+
+          
           </div>
 
           <div className="hero-bottom">
@@ -369,3 +371,6 @@ export default function App() {
     </>
   );
 }
+
+
+

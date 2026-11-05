@@ -1,4 +1,4 @@
-
+﻿
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -140,7 +140,7 @@ app.post("/api/payments/create-order", async (req, res) => {
       });
     }
 
-    // Development-only simulation order: ₹1, never a real package price.
+    // Development-only simulation order: â‚¹1, never a real package price.
     if (paymentMode === "simulation") {
       const orderId = `sim_${crypto.randomUUID()}`;
 
@@ -440,11 +440,13 @@ app.post("/api/enquiries", async (req, res) => {
 
     console.log("Enquiry saved. Starting WhatsApp notification...");
 
-await notifyBusinessOwner(enquiry);
-        // Notify the business owner separately.
-    // A notification failure must not undo the saved enquiry.
-    await notifyBusinessOwner(enquiry);
-
+// Notify the business owner separately.
+// A notification failure must not undo the saved enquiry.
+try {
+  await notifyBusinessOwner(enquiry);
+} catch (notificationError) {
+  console.error("WhatsApp notification failed:", notificationError);
+}
     return res.status(201).json({
       success: true,
       message: "Enquiry saved successfully.",
@@ -461,6 +463,109 @@ await notifyBusinessOwner(enquiry);
 });
 
 // Start server
+
+// ADMIN: GET ALL ENQUIRIES
+app.get("/api/admin/enquiries", verifyAdmin, async (req, res) => {
+  try {
+    const enquiries = await Enquiry.find().sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: enquiries.length,
+      enquiries,
+    });
+  } catch (error) {
+    console.error("Fetch enquiries error:", error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: "Could not retrieve enquiries.",
+    });
+  }
+});
+
+// ADMIN: UPDATE ENQUIRY STATUS
+app.patch("/api/admin/enquiries/:id/status", verifyAdmin, async (req, res) => {
+  try {
+    const { status } = req.body;
+    const allowedStatuses = ["new", "contacted", "quoted", "confirmed", "cancelled"];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid enquiry status.",
+      });
+    }
+
+    const enquiry = await Enquiry.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true, runValidators: true }
+    );
+
+    if (!enquiry) {
+      return res.status(404).json({
+        success: false,
+        message: "Enquiry not found.",
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: "Enquiry status updated.",
+      enquiry,
+    });
+  } catch (error) {
+    console.error("Update enquiry status error:", error.message);
+    return res.status(400).json({
+      success: false,
+      message: "Could not update enquiry status.",
+    });
+  }
+});
+
+// ADMIN: ADD PRIVATE ENQUIRY NOTE
+app.post("/api/admin/enquiries/:id/notes", verifyAdmin, async (req, res) => {
+  try {
+    const text = String(req.body.text || "").trim();
+
+    if (!text || text.length > 2000) {
+      return res.status(400).json({
+        success: false,
+        message: "Note must contain 1–2000 characters.",
+      });
+    }
+
+    const enquiry = await Enquiry.findById(req.params.id);
+
+    if (!enquiry) {
+      return res.status(404).json({
+        success: false,
+        message: "Enquiry not found.",
+      });
+    }
+
+    enquiry.internalNotes.push({
+      text,
+      author: req.admin?.name || "Admin",
+    });
+
+    await enquiry.save();
+
+    return res.json({
+      success: true,
+      message: "Private note saved.",
+      enquiry,
+    });
+  } catch (error) {
+    console.error("Save enquiry note error:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Could not save note.",
+    });
+  }
+});
+
 async function startServer() {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
@@ -477,3 +582,6 @@ async function startServer() {
 }
 
 startServer();
+
+
+

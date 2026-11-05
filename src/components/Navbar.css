@@ -501,3 +501,39 @@
     background: #f9f7ef;
   }
 }
+
+/* LOGO FIX — preserve the original brand mark */
+.nh-brand img {
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  object-fit: contain;
+  background: transparent;
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .nh-brand img {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* LOGO FIX — preserve the original brand mark */
+.nh-brand img {
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  object-fit: contain;
+  background: transparent;
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .nh-brand img {
+    width: 44px;
+    height: 44px;
+  }
+}

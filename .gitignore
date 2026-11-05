@@ -31,3 +31,13 @@ dist/
 
 .env
 server/.env
+# Local backups and audit files
+*.bak
+*.backup
+*.before-*
+*.txt
+*.zip
+
+# Additional server backups
+*backup*
+server-before-*
