@@ -5,7 +5,7 @@ const packages = [
   {
     id: "mysore-ooty",
     name: "Mysore & Ooty",
-    image: "/images/karnataka.jpg",
+    image: import.meta.env.BASE_URL + "images/karnataka.jpg",
     location: "Karnataka & Tamil Nadu",
     category: "Sightseeing package",
     places: "Mysore · Ooty",
@@ -17,7 +17,7 @@ const packages = [
   {
     id: "munnar-alleppey-kochi",
     name: "Munnar, Alleppey & Kochi",
-    image: "/images/kerala.jpg",
+    image: import.meta.env.BASE_URL + "images/kerala.jpg",
     location: "Kerala",
     category: "Multi-destination tour",
     places: "Munnar · Alleppey · Kochi",
@@ -29,7 +29,7 @@ const packages = [
   {
     id: "raj-se-taj-tak",
     name: "Rajasthan",
-    image: "/images/rajasthan.jpg",
+    image: import.meta.env.BASE_URL + "images/rajasthan.jpg",
     location: "Rajasthan & Agra",
     category: "Heritage tour",
     places: "Final route on request",
@@ -41,7 +41,7 @@ const packages = [
   {
     id: "goa-dandeli",
     name: "Goa & Dandeli",
-    image: "/images/goa.jpg",
+    image: import.meta.env.BASE_URL + "images/goa.jpg",
     location: "Goa & Karnataka",
     category: "Beach & nature getaway",
     places: "Goa · Dandeli",

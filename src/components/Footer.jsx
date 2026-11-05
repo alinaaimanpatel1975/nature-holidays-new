@@ -17,7 +17,10 @@ export default function Footer() {
             href="/"
             aria-label="Nature Holidays home"
           >
-            <img src="/images/logo.png" alt="" />
+            <img
+  src={`${import.meta.env.BASE_URL}images/logo.png`}
+  alt="Nature Holidays"
+/>
             <span>Nature Holidays</span>
           </a>
 

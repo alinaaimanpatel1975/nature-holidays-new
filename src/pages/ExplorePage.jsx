@@ -12,7 +12,7 @@ const exploreCategories = {
     subtitle: "Find a good reason to get out.",
     description:
       "Explore day outings, sightseeing and attractions from the Nature Holidays brochure.",
-    image: "/images/things-to-do.jpg",
+    image: import.meta.env.BASE_URL + "images/things-to-do.jpg",
     groups: ["All options", "Theme Parks", "Resort Outings", "Sightseeing"],
     items: [
       { name: "Wonderla Parks & Resort", group: "Theme Parks", description: "Enquire about a park outing and available arrangements." },
@@ -37,7 +37,7 @@ const exploreCategories = {
     subtitle: "Find your place to pause.",
     description:
       "Talk to Nature Holidays about hotel reservations, resort bookings and accommodation for your trip.",
-    image: "/images/accommodation.jpg",
+    image: import.meta.env.BASE_URL + "images/accommodation.jpg",
     groups: ["All options", "Hotels", "Resorts", "Group Stays"],
     items: [
       { name: "Hotel reservation assistance", group: "Hotels", description: "Share your destination, dates, room count and preferred hotel category." },
@@ -51,7 +51,7 @@ const exploreCategories = {
     subtitle: "Let’s get you there.",
     description:
       "Enquire about ticket-booking assistance and transport arrangements for your Nature Holidays trip.",
-    image: "/images/transport.jpg",
+    image: import.meta.env.BASE_URL + "images/transport.jpg",
     groups: ["All options", "Flights", "Trains", "Buses", "Tour Transport"],
     items: [
       { name: "Flight ticket-booking assistance", group: "Flights", description: "Share your departure city, destination, dates and passenger count." },

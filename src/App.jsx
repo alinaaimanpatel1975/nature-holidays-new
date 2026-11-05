@@ -1,4 +1,4 @@
-﻿
+
 import { useEffect, useState } from "react";
 import "./App.css";
 import useHeroTransition from "./useHeroTransition";
@@ -14,42 +14,42 @@ import { useNavigate } from "react-router-dom";
 const destinations = [
   {
     name: "Karnataka",
-    image: "/images/karnataka.jpg",
+    image: import.meta.env.BASE_URL + "images/karnataka.jpg",
     caption: "Coffee trails, ancient cities and greener weekends.",
   },
   {
     name: "Kerala",
-    image: "/images/kerala.jpg",
+    image: import.meta.env.BASE_URL + "images/kerala.jpg",
     caption: "Slow mornings, backwaters and a little coastal calm.",
   },
   {
     name: "Rajasthan",
-    image: "/images/rajasthan.jpg",
+    image: import.meta.env.BASE_URL + "images/rajasthan.jpg",
     caption: "Royal cities, desert skies and stories around every corner.",
   },
   {
     name: "Goa",
-    image: "/images/goa.jpg",
+    image: import.meta.env.BASE_URL + "images/goa.jpg",
     caption: "Salty air, sunshine and days without a rush.",
   },
   {
     name: "Tamil Nadu",
-    image: "/images/tamil-nadu.jpg",
+    image: import.meta.env.BASE_URL + "images/tamil-nadu.jpg",
     caption: "Temple towns, hill escapes and beautiful coastlines.",
   },
   {
     name: "Uttarakhand",
-    image: "/images/uttarakhand.jpg",
+    image: import.meta.env.BASE_URL + "images/uttarakhand.jpg",
     caption: "Mountain mornings and trails worth waking up for.",
   },
   {
     name: "Uttar Pradesh",
-    image: "/images/uttar-pradesh.jpg",
+    image: import.meta.env.BASE_URL + "images/uttar-pradesh.jpg",
     caption: "Timeless monuments and journeys through living history.",
   },
   {
     name: "Maharashtra",
-    image: "/images/maharashtra.jpg",
+    image: import.meta.env.BASE_URL + "images/maharashtra.jpg",
     caption: "Fort trails, city breaks and monsoon-green hills.",
   },
 ];
@@ -225,7 +225,7 @@ export default function App() {
 
             <a className="hero-link" href="#explore">
               Find your experience
-              <span aria-hidden="true">↗</span>
+              <span aria-hidden="true">?</span>
             </a>
 
           
@@ -266,7 +266,7 @@ export default function App() {
                   disabled={isTransitioning}
                   aria-label="Show next destination"
                 >
-                  <span aria-hidden="true">→</span>
+                  <span aria-hidden="true">?</span>
                 </button>
               </div>
             </div>
@@ -346,12 +346,12 @@ export default function App() {
               onClick={selectNextWeekend}
             >
               Next weekend
-              <span>Choose Saturday ↗</span>
+              <span>Choose Saturday ?</span>
             </button>
 
             <button type="submit" className="search-button">
               Search experiences
-              <span aria-hidden="true">↗</span>
+              <span aria-hidden="true">?</span>
             </button>
           </form>
 
